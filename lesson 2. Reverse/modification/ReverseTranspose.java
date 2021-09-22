@@ -1,9 +1,12 @@
 import java.util.Scanner;
 
-public class Reverse {
+public class ReverseTranspose {
     public static void main(String[] args){
         int[][] ints;
         ints = new int[0][];
+
+        int mxLen = 0;
+
 
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()){
@@ -14,7 +17,6 @@ public class Reverse {
             Scanner currentScanner = new Scanner(line);
 
             while (currentScanner.hasNextInt()){
-                // copy int[+1]
                 int[] newIntsString;
                 newIntsString = new int[intsString.length + 1];
                 System.arraycopy(intsString, 0, newIntsString, 0, intsString.length);
@@ -25,7 +27,11 @@ public class Reverse {
                 intsString = newIntsString;
             }
 
-            // copy int[+1][]
+            if (mxLen < intsString.length){
+                mxLen = intsString.length;
+            }
+
+            // copy int[][]
             int[][] newInts;
             newInts = new int[ints.length + 1][];
             for (int i = 0; i < ints.length; i++){
@@ -36,14 +42,14 @@ public class Reverse {
         }
 
         // print int[][]
-        for (int i = ints.length - 1; i >= 0; i--){
-            if (ints[i].length != 0){
-                for (int ii = ints[i].length - 1; ii >= 0; ii--){
-                    System.out.print(ints[i][ii]);
+        for (int i = 0; i < mxLen; i++){
+            for (int ii = 0; ii < ints.length; ii++){
+                if (ints[ii].length > i){
+                    System.out.print(ints[ii][i]);
                     System.out.print(' ');
                 }
             }
-            System.out.println("");
+            System.out.println();
         }
     }
 }
