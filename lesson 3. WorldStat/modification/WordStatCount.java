@@ -1,20 +1,20 @@
-import java.nio.charset.StandardCharsets;
-import java.util.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
-public class WordStatInput {
+public class WordStatCount {
 
     public static void main(String[] args) {
         ArrayList<String> words = new ArrayList<String>();
-        ArrayList<String> sortWords = new ArrayList<String>();
+        ArrayList<Integer> sortWordsIndex = new ArrayList<Integer>();
         ArrayList<Integer> count = new ArrayList<Integer>();
 
         try (BufferedReader reader = new BufferedReader(
-            new InputStreamReader(
-                new FileInputStream(args[0]),
-                "utf8"
+                new InputStreamReader(
+                        new FileInputStream(args[0]),
+                        "utf8"
                 )
-            )
+        )
         ) {
             // read
             String text = "", line;
@@ -56,16 +56,33 @@ public class WordStatInput {
                 }
             }
 
+            // sort
+            int maxIns = 0;
+            int wordCount = words.size();
+            for (int i = 0; i < wordCount; i++){
+                if (maxIns < count.get(i)){
+                    maxIns = count.get(i);
+                }
+            }
+            for (int i = 1; i <= maxIns; i++){
+                for (int ii = 0; ii < wordCount; ii++){
+                    if (count.get(ii) == i){
+                        sortWordsIndex.add(ii);
+                    }
+                }
+            }
+
             // write
             try (PrintWriter writer = new PrintWriter(
-                new OutputStreamWriter(
-                    new FileOutputStream(args[1]),
-                    "utf8"
+                    new OutputStreamWriter(
+                        new FileOutputStream(args[1]),
+                            "utf8"
                     )
-                )
+            )
             ) {
-                for (int i = 0; i < words.size(); i++) {
-                    writer.println(words.get(i) + " " + count.get(i));
+                for (int i = 0; i < wordCount; i++) {
+                    int index = sortWordsIndex.get(i);
+                    writer.println(words.get(index) + " " + count.get(index));
                 }
             } catch (FileNotFoundException e) {
                 System.out.println("File output not found");
