@@ -40,6 +40,7 @@ public class WordStatInput {
                     textWithAllowSymb = textWithAllowSymb + " ";
                 }
             }
+            System.err.println(textWithAllowSymb);
 
             // count
             Scanner scanner = new Scanner(textWithAllowSymb);
@@ -66,6 +67,8 @@ public class WordStatInput {
             ) {
                 for (int i = 0; i < words.size(); i++) {
                     writer.println(words.get(i) + " " + count.get(i));
+
+                    System.err.println(words.get(i) + " " + count.get(i));
                 }
             } catch (FileNotFoundException e) {
                 System.out.println("File output not found");

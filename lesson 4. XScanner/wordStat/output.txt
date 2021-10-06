@@ -1,0 +1,9 @@
+t 2
+nsl 1
+p 1
+npc 3
+fim 2
+z 2
+y 5
+zy 1
+o 1
