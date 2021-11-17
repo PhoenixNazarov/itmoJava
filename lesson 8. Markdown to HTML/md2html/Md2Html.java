@@ -9,6 +9,7 @@ public class Md2Html {
     public static Character SYMBOL_EMPHASIS = '_';
     public static Character SYMBOL_EMPHASIS2 = '*';
     public static Character SYMBOL_CODE = '`';
+    public static Character SYMBOL_QUOTE = '\'';
     public static String SYMBOL_CROSSING = "--";
     public static Character SYMBOL_OUT = '\\';
     public static Character WHITE_SPACE = '\n';
@@ -22,16 +23,22 @@ public class Md2Html {
 
         int i = 0;
         boolean needCheckOne = true;
-        while (i < markdown.length()) {
+        boolean prevSymbolMark;
+        while (i < markdown.length() - 1) {
             String symbol = "";
             String htmlOpen = "";
             String htmlClose = "";
             boolean findTag = false;
-            boolean prevSymbolMark = markdown.charAt(i) == SYMBOL_OUT;
+            if (markdown.charAt(i) == SYMBOL_OUT) {
+                prevSymbolMark = true;
+                i++;
+            } else {
+                prevSymbolMark = false;
+            }
 
             Character curChar = markdown.charAt(i);
 
-            if (curChar == SYMBOL_EMPHASIS || curChar == SYMBOL_EMPHASIS2) {
+            if ((curChar == SYMBOL_EMPHASIS || curChar == SYMBOL_EMPHASIS2) && !prevSymbolMark) {
                 symbol = String.valueOf(curChar);
                 htmlOpen = "<em>";
                 htmlClose = "</em>";
@@ -59,6 +66,13 @@ public class Md2Html {
                         needCheckOne = true;
                     }
                 }
+            }
+            if (curChar == SYMBOL_QUOTE && markdown.charAt(i + 1) == SYMBOL_QUOTE && !prevSymbolMark) {
+                symbol = String.valueOf(curChar).repeat(2);
+                htmlOpen = "<q>";
+                htmlClose = "</q>";
+                findTag = true;
+                i++;
             }
             if (curChar == SYMBOL_CODE) {
                 symbol = String.valueOf(curChar);
@@ -104,7 +118,7 @@ public class Md2Html {
             i++;
         }
         String outString = out.toString();
-        return outString.substring(0, outString.length() - 1);
+        return outString.substring(0, outString.length());
     }
 
     public static String tryParseHeading(String element) {
