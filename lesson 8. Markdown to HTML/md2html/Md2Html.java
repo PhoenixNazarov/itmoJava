@@ -2,17 +2,28 @@ package md2html;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.Stack;
 
 public class Md2Html {
-    public static Character SYMBOL_HEADING = '#';
-    public static Character SYMBOL_EMPHASIS = '_';
-    public static Character SYMBOL_EMPHASIS2 = '*';
-    public static Character SYMBOL_CODE = '`';
-    public static Character SYMBOL_QUOTE = '\'';
-    public static String SYMBOL_CROSSING = "--";
-    public static Character SYMBOL_OUT = '\\';
-    public static Character WHITE_SPACE = '\n';
+    public final static Character SYMBOL_HEADING = '#';
+    public final static Character SYMBOL_EMPHASIS = '_';
+    public final static Character SYMBOL_EMPHASIS2 = '*';
+    public final static Character SYMBOL_CODE = '`';
+    public final static Character SYMBOL_QUOTE = '\'';
+    public final static String SYMBOL_CROSSING = "--";
+    public final static Character SYMBOL_OUT = '\\';
+    public final static Character WHITE_SPACE = '\n';
+
+    public final static Map<String, String> SCREENING = new HashMap<>() {{
+        put("<", "&lt;");
+        put(">", "&gt;");
+        put("&", "&amp;");
+        put("\\", "");
+    }};
+
 
     public static String parsePairMarkers(String markdown) {
         // find and replace pair markup markers
@@ -101,17 +112,8 @@ public class Md2Html {
                 }
             } else {
                 String addChar = String.valueOf(curChar);
-                if (addChar.equals("<")) {
-                    addChar = "&lt;";
-                }
-                if (addChar.equals(">")) {
-                    addChar = "&gt;";
-                }
-                if (addChar.equals("&")) {
-                    addChar = "&amp;";
-                }
-                if (addChar.equals("\\")) {
-                    addChar = "";
+                if (SCREENING.containsKey(addChar)){
+                    addChar = SCREENING.get(addChar);
                 }
                 out.append(addChar);
             }
@@ -169,16 +171,21 @@ public class Md2Html {
         return html.toString();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         String input = args[0];
         String output = args[1];
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8));
-        String html = parseMarkdownToHtml(in);
-        in.close();
-
-        BufferedWriter bw = new BufferedWriter(new FileWriter(output));
-        bw.write(html);
-        bw.close();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8));) {
+            String html = parseMarkdownToHtml(in);
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(output))) {
+                bw.write(html);
+            }
+            catch (java.io.IOException e) {
+                System.out.println("error write");
+            }
+        }
+        catch (java.io.IOException e) {
+            System.out.println("error read");
+        }
     }
 }
