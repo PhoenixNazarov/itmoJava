@@ -1,16 +1,26 @@
 package game;
 
 public class SequentialPlayer implements Player {
+
     @Override
-    public Move makeMove(Position position) {
-        for (int r = 0; r < 3; r++) {
-            for (int c = 0; c < 3; c++) {
-                final Move move = new Move(r, c, position.getTurn());
-                if (position.isValid(move)) {
-                    return move;
+    public Move makeMove(Turn turn) {
+        for (int r = 0; r < turn.getM(); r++) {
+            for (int c = 0; c < turn.getN(); c++) {
+                if (turn.getField()[r][c].getValue().equals(CellStates.E)) {
+                    return new Move(r, c, turn.getValue());
                 }
             }
         }
         throw new AssertionError("No valid moves");
+    }
+
+    @Override
+    public void notificationErrorMove(Move move, String message) {
+
+    }
+
+    @Override
+    public boolean isPlay(){
+        return true;
     }
 }

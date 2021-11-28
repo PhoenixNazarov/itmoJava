@@ -3,9 +3,9 @@ package game;
 public class Move {
     private final int row;
     private final int col;
-    private final Cell value;
+    private final CellStates value;
 
-    public Move(int row, int col, Cell value) {
+    public Move(int row, int col, CellStates value) {
         this.row = row;
         this.col = col;
         this.value = value;
@@ -19,7 +19,7 @@ public class Move {
         return col;
     }
 
-    public Cell getValue() {
+    public CellStates getValue() {
         return value;
     }
 

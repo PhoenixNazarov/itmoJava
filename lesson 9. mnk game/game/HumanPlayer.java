@@ -10,11 +10,30 @@ public class HumanPlayer implements Player {
     }
 
     @Override
-    public Move makeMove(Position position) {
+    public Move makeMove(Turn turn) {
         System.out.println();
         System.out.println("Current position");
-        System.out.println(position);
-        System.out.println("Enter you move for " + position.getTurn());
-        return new Move(in.nextInt() - 1, in.nextInt() - 1, position.getTurn());
+        System.out.println(turn.getStringField());
+        System.out.println("Enter you move for " + turn.getValue());
+        while (true) {
+            try {
+                int x = in.nextInt() - 1;
+                int y = in.nextInt() - 1;
+                return new Move(x, y, turn.getValue());
+            } catch (java.util.InputMismatchException  e) {
+                in.nextLine();
+                System.out.println("Write the correct move");
+            }
+        }
+    }
+
+    @Override
+    public void notificationErrorMove(Move move, String message) {
+        System.out.println(message);
+    }
+
+    @Override
+    public boolean isPlay(){
+        return true;
     }
 }
